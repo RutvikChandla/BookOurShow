@@ -1,0 +1,60 @@
+<p style="color: green"><%= notice %></p>
+<p style="color: red"><%= alert %></p>
+
+<%= render @event %>
+
+<h3>Emulate Dummy concurrent Users</h3>
+<%= form_with url: book_event_path, method: :get do |form| %>
+  <div>
+    <%= form.label :number_of_users, "Emulate concurrent dummy users trying to book first available ticket" %>
+    <%= form.number_field :number_of_users, min: 1, value: 1 %>
+  </div>
+
+  <div>
+    <%= form.label :enable_locking, "READ LOCK" %>
+    <%= form.check_box :for_share %>
+  </div>
+
+  <div>
+    <%= form.label :enable_locking, "EXCLUSIVE LOCK" %>
+    <%= form.check_box :for_update %>
+  </div>
+
+  <div>
+    <%= form.label :enable_locking, "EXCLUSIVE LOCK with skip lock" %>
+    <%= form.check_box :for_update_with_skip_lock %>
+  </div>
+
+  <div>
+    <%= form.submit "Submit" %>
+  </div>
+<% end %>
+
+<h3>Tickets</h3>
+
+<table>
+  <% @event.tickets.each_slice(5) do |ticket_batch| %>
+    <tr>
+      <% ticket_batch.each do |ticket| %>
+        <td>
+          <strong>id:</strong> <%= ticket.id %>
+          <strong>user_id:</strong> <%= ticket.user_id %>
+          
+          <%= content_tag :span, ticket.status, style: (["FILLED", "RESERVED"].include?(ticket.status) ? "color: green;" : "") %>
+        </td>
+
+      <% end %>
+       
+      <!-- Fill in empty columns if there are less than 5 tickets in the last batch -->
+      <% (5 - ticket_batch.size).times do %>
+        <td></td>
+      <% end %>
+    </tr>
+  <% end %>
+</table>
+<div>
+  <%= link_to "Edit this event", edit_event_path(@event) %> |
+  <%= link_to "Back to events", events_path %>
+
+  <%= button_to "Destroy this event", @event, method: :delete %>
+</div>
