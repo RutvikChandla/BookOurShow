@@ -69,3 +69,5 @@ end
 gem "mysql2", "~> 0.5.6"
 
 gem "sidekiq", "~> 7.3"
+
+gem "sidekiq-cron", "~> 1.12"

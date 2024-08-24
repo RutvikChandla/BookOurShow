@@ -1,0 +1,4 @@
+"BouncerJob":
+  cron: "*/1 * * * *"
+  class: "BouncerJob"
+  queue: default
